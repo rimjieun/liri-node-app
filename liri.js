@@ -1,7 +1,7 @@
 var Twitter = require("twitter"),
     spotify = require("spotify"),
     request = require("request"),
-    keys = require("./keys.js");
+    keys = require(".././keys.js");
 
 var twitterClient = new Twitter ({
   consumer_key: keys.TWITTER.CONSUMER_KEY,
