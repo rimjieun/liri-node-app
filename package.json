@@ -1,0 +1,19 @@
+{
+  "name": "liri-node-app",
+  "version": "1.0.0",
+  "description": "A language interpretation and recognition interface for tweets.",
+  "main": "liri.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rimjieun/liri-node-app.git"
+  },
+  "author": "Jieun Rim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rimjieun/liri-node-app/issues"
+  },
+  "homepage": "https://github.com/rimjieun/liri-node-app#readme"
+}
