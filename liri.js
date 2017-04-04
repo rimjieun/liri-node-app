@@ -43,6 +43,7 @@ function runCommand() {
       console.log("Artist(s): Ace of Base");
       console.log("Preview: https://p.scdn.co/mp3-preview/4c463359f67dd3546db7294d236dd0ae991882ff?cid=null");
       console.log("================================================");
+      return;
     }
 
     spotify.search({type: "track", query: arg.trim()}, function(error, response) {
