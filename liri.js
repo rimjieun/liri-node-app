@@ -1,7 +1,7 @@
 var Twitter = require("twitter"),
     spotify = require("spotify"),
     request = require("request"),
-    keys = require(".././keys.js"),
+    keys = require("./keys.js"),
     fs = require("fs");
 
 var twitterClient = new Twitter ({
@@ -14,7 +14,7 @@ var twitterClient = new Twitter ({
 var command = process.argv[2],
     arg = process.argv[3];
 
-function runCommands() {
+function runCommand() {
   if (command === "my-tweets") {
     // How does node know what user I am? Are the twitter keys linked to my account?
     // What if I want to get someone else's tweets?
@@ -34,33 +34,7 @@ function runCommands() {
 
   if (command === "spotify-this-song") {
 
-    if (arg !== undefined) {
-      spotify.search({type: "track", query: arg.trim()}, function(error, response) {
-        if (error) {
-          throw error;
-        }
-        var track = response.tracks.items[0];
-        var title = track.name;
-        var album = track.album.name;
-      // Is there a better way to do this?==============================
-        var artists = [];
-        var getArtists = function() {
-          for (i = 0; i < track.artists.length; i++) {
-            artists.push(" " + track.artists[i].name);
-          }
-        };
-        getArtists();
-      //================================================================
-        var previewURL = track.preview_url;
-        console.log("================================================");
-        console.log("Title: " + title);
-        console.log("Album: " + album);
-        console.log("Artist(s):" + artists);
-        console.log("Preview: " + previewURL);
-        console.log("================================================");
-      });
-    }
-    else {
+    if (arg === undefined) {
       console.log("================================================");
       console.log("You didn't input a song so we chose one for you.");
       console.log("================================================");
@@ -70,11 +44,36 @@ function runCommands() {
       console.log("Preview: https://p.scdn.co/mp3-preview/4c463359f67dd3546db7294d236dd0ae991882ff?cid=null");
       console.log("================================================");
     }
+
+    spotify.search({type: "track", query: arg.trim()}, function(error, response) {
+      if (error) {
+        throw error;
+      }
+      var track = response.tracks.items[0];
+      var title = track.name;
+      var album = track.album.name;
+    // Is there a better way to do this?==============================
+      var artists = [];
+      var getArtists = function() {
+        for (i = 0; i < track.artists.length; i++) {
+          artists.push(" " + track.artists[i].name);
+        }
+      };
+      getArtists();
+    //================================================================
+      var previewURL = track.preview_url;
+      console.log("================================================");
+      console.log("Title: " + title);
+      console.log("Album: " + album);
+      console.log("Artist(s):" + artists);
+      console.log("Preview: " + previewURL);
+      console.log("================================================");
+    });
   }
 
   if (command === "movie-this") {
 
-    if (arg == undefined) {
+    if (arg === undefined) {
       arg = "Mr. Nobody";
     }
 
@@ -113,10 +112,9 @@ if (command === "do-what-it-says") {
     var dataArr = data.split(",");
     command = dataArr[0];
     arg = dataArr[1];
-    console.log(command, arg);
-    runCommands();
+    runCommand();
   });
 }
 else {
-  runCommands();
+  runCommand();
 }
