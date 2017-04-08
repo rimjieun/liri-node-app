@@ -1,9 +1,11 @@
+//Access node modules and import external js
 var Twitter = require("twitter"),
     spotify = require("spotify"),
     request = require("request"),
     keys = require("./keys.js"),
     fs = require("fs");
 
+//Store twitter keys
 var twitterClient = new Twitter ({
   consumer_key: keys.TWITTER.CONSUMER_KEY,
   consumer_secret: keys.TWITTER.CONSUMER_SECRET,
@@ -11,41 +13,51 @@ var twitterClient = new Twitter ({
   access_token_secret: keys.TWITTER.ACCESS_TOKEN_SECRET
 });
 
+//Store user request and declare variables
 var command = process.argv[2],
-    arg = process.argv[3];
+    arg = process.argv[3],
+    requestMsg = "",
+    responseMsg = "";
 
+//Console log and append file user request and data respones
+function logAndAppend(input, output) {
+  console.log(output);
+  fs.appendFile("log.txt", input + "\n" + output, function(error) {
+    if (error) {
+      throw error;
+    }
+  })
+}
+
+//Create function to execute user request
 function runCommand() {
+  //If user requests "my-tweets"...
   if (command === "my-tweets") {
-    // How does node know what user I am? Are the twitter keys linked to my account?
-    // What if I want to get someone else's tweets?
-
     twitterClient.get("statuses/user_timeline", function(error, tweets, response) {
       if (error) {
         throw error;
       }
-      console.log("================================================");
-      console.log("Last 20 tweets:");
+      var tweetsArr = [];
       for (i = 0; i < tweets.length; i++) {
-        console.log(tweets[i].text);
+        tweetsArr.push(tweets[i].text);
       }
-      console.log("================================================");
+      requestMsg = "COMMAND: " + command;
+      responseMsg = "================================================\n" +
+                    "Last 20 tweets:\n" + tweetsArr.join("\n") + "\n\n";
+      logAndAppend(requestMsg, responseMsg);
     });
   }
-
+  //If user requests "spotify-this song"...
   if (command === "spotify-this-song") {
-
     if (arg === undefined) {
-      console.log("================================================");
-      console.log("You didn't input a song so we chose one for you.");
-      console.log("================================================");
-      console.log("Title: The Sign");
-      console.log("Album: The Sign (1993)");
-      console.log("Artist(s): Ace of Base");
-      console.log("Preview: https://p.scdn.co/mp3-preview/4c463359f67dd3546db7294d236dd0ae991882ff?cid=null");
-      console.log("================================================");
+      requestMsg = "COMMAND: " + command;
+      responseMsg = "================================================\n" +
+                    "Title: The Sign\n" + "Album: The Sign (1993)\n" +
+                    "Artist(s): Ace of Base\n" +
+                    "Preview: https://p.scdn.co/mp3-preview/4c463359f67dd3546db7294d236dd0ae991882ff?cid=null\n\n";
+      logAndAppend(requestMsg, responseMsg);
       return;
     }
-
     spotify.search({type: "track", query: arg.trim()}, function(error, response) {
       if (error) {
         throw error;
@@ -53,7 +65,7 @@ function runCommand() {
       var track = response.tracks.items[0];
       var title = track.name;
       var album = track.album.name;
-    // Is there a better way to do this?==============================
+      //Is there a better way to do this?==============================
       var artists = [];
       var getArtists = function() {
         for (i = 0; i < track.artists.length; i++) {
@@ -61,25 +73,21 @@ function runCommand() {
         }
       };
       getArtists();
-    //================================================================
+      //================================================================
       var previewURL = track.preview_url;
-      console.log("================================================");
-      console.log("Title: " + title);
-      console.log("Album: " + album);
-      console.log("Artist(s):" + artists);
-      console.log("Preview: " + previewURL);
-      console.log("================================================");
+      requestMsg = "COMMAND: " + command + "," + arg;
+      responseMsg = "================================================\n" +
+                    "Title: " + title + "\n" + "Album: " + album + "\n" +
+                    "Artist(s):" + artists + "\n" + "Preview: " + previewURL + "\n\n";
+      logAndAppend(requestMsg, responseMsg);
     });
   }
-
+  //If user requests "movie-this"...
   if (command === "movie-this") {
-
     if (arg === undefined) {
       arg = "Mr. Nobody";
     }
-
     var omdbURL = "http://www.omdbapi.com/?t=" + arg.trim();
-    
     request(omdbURL, function(error, response, body) {
       if (error) {
         throw error;
@@ -93,21 +101,19 @@ function runCommand() {
       var plot = movie.Plot;
       var actors = movie.Actors;
       var rottenTomatoes = movie.Ratings[1].Value;
-
-      console.log("================================================");
-      console.log("Title: " + title);
-      console.log("Year: " + year);
-      console.log("IMDB Rating: " + imdbRating);
-      console.log("Rotten Tomatoes Rating: " + rottenTomatoes);
-      console.log("Country: " + country);
-      console.log("Language: " + language);
-      console.log("Actors: " + actors);
-      console.log("Synopsis: " + plot);
-      console.log("================================================");
+      requestMsg = "COMMAND: " + command;
+      responseMsg = "================================================\n" +
+                    "Title: " + title + "\n" + "Year: " + year + "\n" +
+                    "IMDB Rating: " + imdbRating + "\n" +
+                    "Rotten Tomatoes Rating: " + rottenTomatoes + "\n" +
+                    "Country: " + country + "\n" + "Language: " + language + "\n" +
+                    "Actors: " + actors + "\n" + "Synopsis: " + plot + "\n\n";
+      logAndAppend(requestMsg, responseMsg);
     });
   }
 }
 
+//If user requests "do-what-it-says"...
 if (command === "do-what-it-says") {
   fs.readFile("random.txt", "utf8", function(error, data) {
     var dataArr = data.split(",");
