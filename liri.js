@@ -65,15 +65,10 @@ function runCommand() {
       var track = response.tracks.items[0];
       var title = track.name;
       var album = track.album.name;
-      //Is there a better way to do this?==============================
       var artists = [];
-      var getArtists = function() {
-        for (i = 0; i < track.artists.length; i++) {
-          artists.push(" " + track.artists[i].name);
-        }
-      };
-      getArtists();
-      //================================================================
+      for (i = 0; i < track.artists.length; i++) {
+        artists.push(" " + track.artists[i].name);
+      }
       var previewURL = track.preview_url;
       requestMsg = "COMMAND: " + command + "," + arg;
       responseMsg = "================================================\n" +
