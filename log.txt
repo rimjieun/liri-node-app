@@ -1,15 +1,1 @@
 
-COMMAND: spotify-this-song
-================================================
-Title: The Sign
-Album: The Sign (1993)
-Artist(s): Ace of Base
-Preview: https://p.scdn.co/mp3-preview/4c463359f67dd3546db7294d236dd0ae991882ff?cid=null
-
-COMMAND: spotify-this-song,hit me baby one more time
-================================================
-Title: Hit Me Baby One More Time (Epic Trailer Version) [feat. Blu Holliday]
-Album: The Iconic Series, Vol. 5
-Artist(s): J2, Blu Holliday
-Preview: https://p.scdn.co/mp3-preview/1e34f433e141be331c85acf18172fec19ada9f5b?cid=null
-
